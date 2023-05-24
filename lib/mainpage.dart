@@ -20,61 +20,71 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Qeustions'),
+        title: const Text('Questions'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: questions.length,
-              itemBuilder: (context, index) {
-                final question = questions[index];
-                final isAnswered = selectedAnswers[index].isNotEmpty;
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.blue, Colors.green], // Customize the gradient colors here
+          ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: questions.length,
+                itemBuilder: (context, index) {
+                  final question = questions[index];
+                  final isAnswered = selectedAnswers[index].isNotEmpty;
 
-                return Card(
-                  elevation: 2.0,
-                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: ListTile(
-                    title: Text(
-                      question,
-                      style: TextStyle(
-                        fontWeight:
-                            isAnswered ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                    subtitle: isAnswered ? Text('Answered') : null,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => QuestionPage(
-                            studentID: widget.studentID,
-                            question: question,
-                            onAnswerSelected: (answer) {
-                              setState(() {
-                                selectedAnswers[index] =
-                                    answer; // Update selected answer
-                              });
-                            },
-                          ),
+                  return Card(
+                    elevation: 2.0,
+                    color: Colors.transparent, // Make the card transparent
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: ListTile(
+                      title: Text(
+                        question,
+                        style: TextStyle(
+                          fontWeight: isAnswered ? FontWeight.bold : FontWeight.normal,
+                          color: Colors.white, // Set the text color
                         ),
-                      );
-                    },
-                  ),
-                );
-              },
+                      ),
+                      subtitle: isAnswered ? Text('Answered') : null,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuestionPage(
+                              studentID: widget.studentID,
+                              question: question,
+                              onAnswerSelected: (answer) {
+                                setState(() {
+                                  selectedAnswers[index] = answer; // Update selected answer
+                                });
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                _showSelectedAnswersDialog(); // Show selected answers dialog
-              },
-              child: const Text('Submit'),
+            Container(
+              margin: EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  _showSelectedAnswersDialog(); // Show selected answers dialog
+                },
+                child: const Text('Submit'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
