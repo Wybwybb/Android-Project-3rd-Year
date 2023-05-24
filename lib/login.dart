@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-
 import 'mainpage.dart';
+import 'connection.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController idController = TextEditingController();
+  final Connection connection = Connection();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Branzuela, Raymond Benedict'),
+        title: const Text('Branzuela, Raymond Benedict'),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -24,45 +25,55 @@ class LoginPage extends StatelessWidget {
         ),
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Enter your ID Number', // Added text above the text field
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
                 TextField(
                   controller: idController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Student ID',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.person),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final String studentID = idController.text;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MainPage(studentID: studentID),
-                      ),
-                    );
+                    try {
+                      final loginData =
+                          await connection.getLoginData(studentID);
+                      // Process the login data here
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainPage(studentID: loginData),
+                        ),
+                      );
+                    } catch (e) {
+                      // Handle any errors during login data retrieval
+                      print('Login failed: $e');
+                      // Show an error dialog or display an error message
+                    }
                   },
-                  child: Text(
+                  child: const Text(
                     'Login',
                     style: TextStyle(fontSize: 18.0),
                   ),
                   style: ElevatedButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 40.0, vertical: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40.0, vertical: 16.0),
                   ),
                 ),
               ],
